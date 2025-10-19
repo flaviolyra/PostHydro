@@ -1,0 +1,245 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Ordered Mouth Nodes &#8212; PostHydro 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Areas and Lengths" href="structurebuilding_areaslengths.html" />
+    <link rel="prev" title="Structure Building" href="structurebuilding.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="ordered-mouth-nodes">
+<h1>Ordered Mouth Nodes<a class="headerlink" href="#ordered-mouth-nodes" title="Permalink to this headline">¶</a></h1>
+<p>The Pfafstetter coding of a hydrographic region starts with the coding of the basins that flow to the continental coastal line. In PostHydro the different coastlines that comprise a region (ocean coastlines, islands coastlines, interior seas coastlines) are incorporated as a single composite coastline, always with the earth to the right of the line, on which the mouth nodes of the basins are ordered, from the start point of the line to its end. This composite coastline is treated in the Pfafstetter coding method as if it was a main stream line, this time flowing from its endpoint to the start. The basin codes are assigned taking into account the order of their mouth nodes on the line and their upstream areas.</p>
+<p>The process starts with the development of a mouth nodes table, on whose individual coastlines they are located. The composite coastline consists of an ordered set of coastline segments, following a table that states a hierarchy of coastal lines connections, that is, what coastal line is a child of another. The composite coastline means that a segment on the parent coastline ends when a connection point is found to its child coastline. The segment on the child line follows the same logic, starting at its connection point until a point on the line that is its contact to a child line of its own or until its contact with the parent line is reached, when it goes back to the parent. The connection points are the closest points on the two connecting lines, if not specified otherwise in a special connect points table.</p>
+<p>More than one composite coastline can be processed in sequence in the generation of the ordered_mouth_nodes table, each getting the name coast_system on the table. The mouth nodes get their order from the order of the coast systems and, for each composite coastline, from the order of their coastal line segments and from their mouth node position on the segments.</p>
+<section id="procedures-and-functions">
+<h2>Procedures and Functions<a class="headerlink" href="#procedures-and-functions" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pfcode_mouth_nodes">
+<span class="sig-name descname"><span class="pre">pfcode_mouth_nodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pfcode_mouth_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate the pfcode of the basins on the ordered_mouth_nodes table according to the order of the node on the table
+and its upstream area</p>
+</dd></dl>
+
+<p>—</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="insert_ordered_mouth_nodes">
+<span class="sig-name descname"><span class="pre">insert_ordered_mouth_nodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#insert_ordered_mouth_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate ordered_mouth_nodes table by inserting nodes from mouth_nodes table, ordered by the id of the costal line segment
+where they belong and their location on the costal line</p>
+</dd></dl>
+
+<p>—</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="create_ordered_mouth_nodes">
+<span class="sig-name descname"><span class="pre">create_ordered_mouth_nodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#create_ordered_mouth_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create ordered_mouth_nodes table</p>
+</dd></dl>
+
+<p>—</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="update_mouth_nodes_lines">
+<span class="sig-name descname"><span class="pre">update_mouth_nodes_lines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">search_dist</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#update_mouth_nodes_lines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Identify mouth node’s corresponding coastline and location on line on mouth_nodes table,
+searching for the nearest coastline on oriented_coastal_lines table, within search_dist radius</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>search_dist</strong> (<em>double precision</em>) – maximum search radius to look for coastlines</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>—</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="gen_coastal_connect_points">
+<span class="sig-name descname"><span class="pre">gen_coastal_connect_points</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gen_coastal_connect_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate coastal_connect_points, from oriented_coastal_lines, with the coastal lines geometry, and coastal_lines_connection,
+with the designed connectivity order for developing the composite coastal line.
+Unless specified otherwise in a special_connect_points table, those points will be the closest points on the two connecting lines</p>
+</dd></dl>
+
+<p>—</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="exclude_false_mouth_nodes">
+<span class="sig-name descname"><span class="pre">exclude_false_mouth_nodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#exclude_false_mouth_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exclude false mouth nodes from mouth_nodes table according to false_mouth_nodes table</p>
+</dd></dl>
+
+<p>—</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="gen_mouth_nodes">
+<span class="sig-name descname"><span class="pre">gen_mouth_nodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gen_mouth_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the core (node id, reach id and geom) of the mouth_nodes table, relating node and reach id, coast line id, name
+and location on the coastline, from nodes in the hydrography table that are to node, but not from node</p>
+</dd></dl>
+
+<p>—</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="set_area_length_up_mouth_nodes">
+<span class="sig-name descname"><span class="pre">set_area_length_up_mouth_nodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#set_area_length_up_mouth_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update area upstream and maximum length upstream on ordered_mouth_nodes table, from mouth reach data on hydrography table</p>
+</dd></dl>
+
+<p>—</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="add_coastal_line_segments">
+<span class="sig-name descname"><span class="pre">add_coastal_line_segments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ini_loc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_coastal_line</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#add_coastal_line_segments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate coastal line segments corresponding to id_line coastal_line on coastal_line_segments table, starting at ini_loc
+location on the line and taking as limits the from_line_point corresponding to this line at the coastal_connect_points table.
+At every from_line_point, the routine is called recursively to generate the segments for the connecting coastal line (to_line_id).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ini_loc</strong> (<em>double precision</em>) – location of the initial point of the first id_line segment to be added</p></li>
+<li><p><strong>id_line</strong> (<em>integer</em>) – id of the line whose segments will be added to coastal_line_segments table</p></li>
+<li><p><strong>main_coastal_line</strong> (<em>character varying</em>) – name of the main coastal line (coast_system) to which these segments belong</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p>—</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="gen_pfcode_mouth_reaches">
+<span class="sig-name descname"><span class="pre">gen_pfcode_mouth_reaches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">minid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gen_pfcode_mouth_reaches" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pfafstetter code ordered_mouth_nodes table (basic code of the basins whose mouth nodes are in the table)
+generate in pfcode one additional Pfafstetter code digit (one further step of Pfadstetter coding), for the end reaches in
+ordered_mouth_nodes table whose gid lies between minid and maxid
+call itself recursively whenever an odd digit is added to a range of mouth nodes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>minid</strong> (<em>integer</em>) – initial gid on ordered_mouth_nodes table of the mouth nodes to be one step further Pfafstetter classified</p></li>
+<li><p><strong>maxid</strong> (<em>integer</em>) – final gid on ordered_mouth_nodes table of the mouth nodes to be one step further Pfafstetter classified</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p>—</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="gen_coastal_line_segments">
+<span class="sig-name descname"><span class="pre">gen_coastal_line_segments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">main_line_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_line_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gen_coastal_line_segments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a coastal_segments table from a main coastal line, consisting of an ordered chain of coastal segments on the line itself
+and on contiguous islands and inner seas, based on a coastal_connect_points table</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>main_line_id</strong> (<em>integer</em>) – id of the main coastal line (coast system)</p></li>
+<li><p><strong>main_line_name</strong> (<em>character varying</em>) – name of the main coastal line</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">PostHydro</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="informationstructure.html">Information Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pfafstettercoding.html">Pfafstetter Coding</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="capabilities.html">PostHydro Capabilities</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="structurebuilding.html">Structure Building</a></li>
+<li class="toctree-l2"><a class="reference internal" href="informationreferencing.html">Information Referencing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="upstreamdownstreamnavigation.html">Upstream Downstream Navigation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="desktopclient.html">Desktop Client</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="capabilities.html">PostHydro Capabilities</a><ul>
+  <li><a href="structurebuilding.html">Structure Building</a><ul>
+      <li>Previous: <a href="structurebuilding.html" title="previous chapter">Structure Building</a></li>
+      <li>Next: <a href="structurebuilding_areaslengths.html" title="next chapter">Areas and Lengths</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2025, Flavio Lyra.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/structurebuilding_orderedmouthnodes.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

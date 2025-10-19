@@ -1,0 +1,8 @@
+field name,field type,description
+nodid,integer,confluence node id
+main_id,integer,main reach id
+main_lengthup,double precision,maximum length upstream of the main reach
+main_areaup,double precision,upstream area on the main reach
+trib_id,integer,tributary reach id
+trib_lengthup,double precision,maximum length upstream of the tributary reach
+trib_areaup,double precision,upstream area on the tributary reach

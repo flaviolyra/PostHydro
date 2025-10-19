@@ -1,0 +1,47 @@
+# This file contains metadata for your plugin.
+
+# This file should be included when you package your plugin.# Mandatory items:
+
+[general]
+name=Upstream Downstream
+qgisMinimumVersion=3.0
+description=Upstream and Downstream features
+version=0.1
+author=Flavio Lyra
+email=flavio.jose.lyra@gmail.com
+
+about=On clicking with this tool on a hidrography reach from a topology indexed database, a multiple choice box is presented, of upstream and downstream features available in the database. After you select the items you are interested on, it incorporates the chosen features, upstream or downstream of the selected reach, as project layers in your project. Available features can be hydrography related point features, such as dams, streamflow gages, waste discharge points and others, which can be queried upstream or downstream of the selected reach. They can also be spatial watershed (upstream) related features such as land use, soils, demography and such.
+
+tracker=http://bugs
+repository=http://repo
+# End of mandatory metadata
+
+# Recommended items:
+
+hasProcessingProvider=no
+# Uncomment the following line and add your changelog:
+# changelog=
+
+# Tags are comma separated with spaces allowed
+tags=python
+
+homepage=http://homepage
+category=Plugins
+icon=icon.png
+# experimental flag
+experimental=True
+
+# deprecated flag (applies to the whole plugin, not just a single version)
+deprecated=False
+
+# Since QGIS 3.8, a comma separated list of plugins to be installed
+# (or upgraded) can be specified.
+# Check the documentation for more information.
+# plugin_dependencies=
+
+Category of the plugin: Raster, Vector, Database or Web
+# category=
+
+# If the plugin can run on QGIS Server.
+server=False
+

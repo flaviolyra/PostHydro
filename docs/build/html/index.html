@@ -1,0 +1,144 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Welcome to PostHydro’s documentation! &#8212; PostHydro 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Information Structure" href="informationstructure.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="welcome-to-posthydro-s-documentation">
+<h1>Welcome to PostHydro’s documentation!<a class="headerlink" href="#welcome-to-posthydro-s-documentation" title="Permalink to this headline">¶</a></h1>
+<p>The goal of this project is to make possible the representation of any surface water related information, waterstreams related (linear reference) and watersheds related (surface reference), in a relational database and to be able to query this information with simple, fast, non-geographical queries.</p>
+<p>The project relies on the previous availability of a dual spatial database, with a linear table representing water streams and lakes centerlines and a spatial table with contributing areas. Water streams lines represent river reaches and lakes centerlines, with their from and to nodes, according to the water flow. Contributing areas may refer to one or a group of connected reaches.  The node links in this form of representation of the water centerlines is what make possible the search for upstream and downstream features, which is essential for water management and studies, as it allows linking causes to effects, concerning surface water quantity and quality. Databases like these have been developed all around the world, as for instance in the United States (<a class="reference external" href="https://www.epa.gov/waterdata/nhdplus-national-hydrography-dataset-plus">NHDPlus</a>), Australia (<a class="reference external" href="https://www.ga.gov.au/scientific-topics/national-location-information/national-surface-water-information">Geofabric</a>), Europe (<a class="reference external" href="https://www.eea.europa.eu/en/datahub/datahubitem-view/a9844d0c-6dfb-4c0c-a693-7d991cc82e6e">Ecrins</a>) and Brazil (<a class="reference external" href="https://metadados.snirh.gov.br/geonetwork/srv/por/catalog.search#/metadata/0c698205-6b59-48dc-8b5e-a58a5dfcc989">Base_Hidrográfica_Ottocodificada</a>).</p>
+<p>Systems built around these concepts usually require specialized GIS software for upstream downstream navigation. With PostHydro, however, this kind of query is handled by the database manager as an ordinary, non-spatial query, since the reaches table (hydrography) incorporate the Pfafstetter coding, which can be used as a simple upstream / downstream index on the table. The association of each hydrography reach to an elementary contributing area turns the query for the upstream watershed into a simple matter of aggregation of the upstream reaches’ contributing areas.</p>
+<p>Besides the capability of instantaneous querying the form and the extent of a basin upstream and its downstream path, PostHydro provides, by means of ordinary non-geographical database queries, the capability of querying, on the surface water context (that is, upstream or downstream querying), different kinds of georeferenced information related to surface water, once they have been previously referenced to the waterbasin, in a process we can call “hydroreference”. This new positional reference is all we really need for water management processes or studies.</p>
+<p>The project was developed over a PostGIS database, a geographical extension of the PostgreSQL database. The project was structured as a simple extension of PostGIS, not consisting of a formal PostgreSQL extension, but only a template database.The goal of the project is to extend PosgreSQL scope to the hydro domain, hence the name PostHydro.</p>
+<p>As part of the project, one first mutilingual desktop client application has been developed, as a QGIS extension. The concepts used in this client can be easily applied to other client applications, such as a web application, for example.</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="informationstructure.html">Information Structure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="informationstructure.html#tables">Tables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pfafstettercoding.html">Pfafstetter Coding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="capabilities.html">PostHydro Capabilities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structurebuilding.html">Structure Building</a></li>
+<li class="toctree-l2"><a class="reference internal" href="informationreferencing.html">Information Referencing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="upstreamdownstreamnavigation.html">Upstream Downstream Navigation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="desktopclient.html">Desktop Client</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="desktopclient.html#methods">Methods</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">PostHydro</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="informationstructure.html">Information Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pfafstettercoding.html">Pfafstetter Coding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="capabilities.html">PostHydro Capabilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="desktopclient.html">Desktop Client</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="informationstructure.html" title="next chapter">Information Structure</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2025, Flavio Lyra.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

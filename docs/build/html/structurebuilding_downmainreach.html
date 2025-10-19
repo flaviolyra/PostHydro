@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Down and Main Reaches &#8212; PostHydro 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Pfafstetter Coding" href="structurebuilding_pfafstettercoding.html" />
+    <link rel="prev" title="Areas and Lengths" href="structurebuilding_areaslengths.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="down-and-main-reaches">
+<h1>Down and Main Reaches<a class="headerlink" href="#down-and-main-reaches" title="Permalink to this headline">¶</a></h1>
+<p>Spatial features are related to contributing areas as their elementary reference. Queries, on the other hand, are always related to reaches. Therefore, when the contributing areas are associated to more than one reach, we have to know if the reach we are querying about is part of the accumulating process or not. Only those that are part of the link from one contributing area to the other get into this category and so are called main reaches. When we query about an upstream accumulated spatial feature on a main reach we have to use the upstream accumulated values table. When querying on a secondary reach, however, we should use the non accumulated values table.</p>
+<p>The accumulating process, done when we hydroreference a spatial feature, is done by traversing the links between reaches, although their elementary unit is the individual contributing area. In order to accumulate an elementary spatial feature we should add the non accumulated feature just once per contributing area. To make this possible we accumulate only when we get to the downmost reach among those that share the same area. These downmost reaches, therefore, should be signalled.</p>
+<p>Main and down reaches setting is done on a basin level, using the ordered_mouth_nodes table. In PostHydro, however, different mouth reaches can share the same contributing area. Down and main reaches should be set only on the most important (larger area upstream) basin. A special routine is provided to make a final correction in these cases.</p>
+<section id="procedures-and-functions">
+<h2>Procedures and Functions<a class="headerlink" href="#procedures-and-functions" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="set_main_down_reach">
+<span class="sig-name descname"><span class="pre">set_main_down_reach</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reachid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#set_main_down_reach" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set is_main_rch and is_down_rch markers on hydrography table
+sets is_main_rch and is_down_reach true, follows main path, setting is_main_reach true while in the same areaid,
+calls itself recursively when a reachid on the main path with a different areaid is found</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>reachid</strong> (<em>integer</em>) – id of the reach whose upstream reaches’ is_main_rch and is_down_rch we want to update</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>—</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="set_main_down_false">
+<span class="sig-name descname"><span class="pre">set_main_down_false</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reachid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#set_main_down_false" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set is_down_rch and is_main_rch to false in hydrography for reachid and upstream reaches</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>reachid</strong> (<em>integer</em>) – id of the reach whose upstream reaches’ is_down_rch and is_main_rch are set to false</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>—</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="update_main_down_reach">
+<span class="sig-name descname"><span class="pre">update_main_down_reach</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#update_main_down_reach" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update is_main_rch and is_down_rch for all basins whose root nodes are in ordered_mouth_nodes_table</p>
+</dd></dl>
+
+<p>—</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="correct_main_down">
+<span class="sig-name descname"><span class="pre">correct_main_down</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#correct_main_down" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update is_main_rch and is_down_rch to False on all secondary (smaller upstream area) basins on a same contributing area</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">PostHydro</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="informationstructure.html">Information Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pfafstettercoding.html">Pfafstetter Coding</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="capabilities.html">PostHydro Capabilities</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="structurebuilding.html">Structure Building</a></li>
+<li class="toctree-l2"><a class="reference internal" href="informationreferencing.html">Information Referencing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="upstreamdownstreamnavigation.html">Upstream Downstream Navigation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="desktopclient.html">Desktop Client</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="capabilities.html">PostHydro Capabilities</a><ul>
+  <li><a href="structurebuilding.html">Structure Building</a><ul>
+      <li>Previous: <a href="structurebuilding_areaslengths.html" title="previous chapter">Areas and Lengths</a></li>
+      <li>Next: <a href="structurebuilding_pfafstettercoding.html" title="next chapter">Pfafstetter Coding</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2025, Flavio Lyra.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/structurebuilding_downmainreach.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

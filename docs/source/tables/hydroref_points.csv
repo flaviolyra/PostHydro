@@ -1,0 +1,13 @@
+field name,field type,description
+id,integer,point id (primary key)
+ptname,text,point name
+hydroref_form,text,point hydroreferencing form: 'direct' if on a represented reach or 'indirect' if just upstream of a reach
+reachid,integer,point reach code (direct) or first downstream point on a represented reach (indirect)
+pfcode,text,point reach pfafstetter code
+rivcode,text,point river code 
+rivname,text,point river name
+lngthrivmouth,double precision,point length to the river mouth in km
+lngthtomouth,double precision,point length to the basin mouth in km
+hydroref_dist,double precision,informed point distance to the nearest point on a represented reach in km 
+geom_hr,geometry(Point),geometry of the the nearest point on a represented reach
+geom,geometry(Point),geometry of the the point

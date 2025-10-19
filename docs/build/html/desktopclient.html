@@ -1,0 +1,313 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Desktop Client &#8212; PostHydro 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Upstream Downstream Navigation" href="upstreamdownstreamnavigation.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="desktop-client">
+<h1>Desktop Client<a class="headerlink" href="#desktop-client" title="Permalink to this headline">¶</a></h1>
+<p>The desktop client was developed as a Python QGIS plugin, called Upstream Downstream, to be used in a project where the hydrography, coastlines and other spatial features incorporated into the PostHydro database can be displayed and queried upstream or downstream of any point on the hydrography.</p>
+<blockquote>
+<div></div></blockquote>
+<p>A QGIS project should be created, based on the PostHydro database of the region of interest, with the hydrography layer, other layers of interest such as the oriented_coastal_lines and layers of the hydroreferenced spatial and point features, plus other publicly available features of interest, such as OpenStreetMap, for example. The plugin works as a new tool, whose icon is <a class="reference internal" href="_images/icon.png"><img alt="Upstream Downstream icon" src="_images/icon.png" style="width: 23px;" /></a>. To use the tool the hydrography layer should be selected and the tool icon clicked.</p>
+<img alt="_images/qgis.png" src="_images/qgis.png" />
+<p>Once a hydrography reach is clicked with the tool, the application locates the point, in terms of the river name (if available) and distance along the streams to river and basin mouth, and displays a list of database available hydroreferenced features, taken from the information_application table, on the local idiom of the computer (if the idiom is not available in information_application table, in english):</p>
+<img alt="_images/qgis_upstream_downstream_options.png" src="_images/qgis_upstream_downstream_options.png" />
+<p>After selecting one or more of the features, as shown below, and clicking ok, the application queries the database and display the results as new QGIS layers.</p>
+<img alt="_images/qgis_upstream_downstream_selected_options.png" src="_images/qgis_upstream_downstream_selected_options.png" />
+<p>The results of the queries are shown as additional layers in the QGIS project, referenced to the reach id of the point. Those that have a geographical expression are shown in the map window.</p>
+<img alt="_images/qgis_upstream_downstream_result.png" src="_images/qgis_upstream_downstream_result.png" />
+<p>The spatial features queries results, that are expressed as tables, as well as details of the selected point features results, can be shown as table attributes of the corresponding layers.</p>
+<img alt="_images/qgis_upstream_countries.png" src="_images/qgis_upstream_countries.png" />
+<img alt="_images/qgis_downstream_dams.png" src="_images/qgis_downstream_dams.png" />
+<p>The desktop client, a QGIS Python plugin, implements a number of methods, in a class called UpstreamDownstreamTool:</p>
+<p>The first, canvasPressEvent, responds to the click on a hydrography reach by identifying the reach and opening a window that displays the location of of the reach in its basin and the possible hydroreferenced queries you can submit to the database, taken from the contents of the information_application table.</p>
+<p>The minimum content of the table refers to queries for the watershed upstream of the reach elementary contributing area, the reaches upstream of the chosen reach and the main path downstream. If the hydrography topology of the region allows for divergences at the hydrography nodes, a register to display all possible downstream paths will also be present on the information_application table. The other optional registers refer to the point and spatial features that have been hydroreferenced in the database. For every point feature referenced in the database two options of queries will be available in the information_application table: feature elements upstream and downstream. For every spatial feature hydroreferenced in the database, a register to display the feature upstream of the chosen reach will be present on the information_application table.</p>
+<p>The remaining methods are the ones that implement the chosen queries displayed by the canvasPressEvent method. Each one of the basic queries (to display downstream paths and upstream areas and reaches) has its specific method (generateWatershed, generateMainStreamDown, generateUpstreamReaches and generateCompletePathDownstream). The ones to display point features down and upstream and spatial features upstream (generateDownstreamPointFeatures, generateUpstreamPointFeatures and generateUpstreamSpatialFeatures) are generic methods, independent of the specific feature involved. The parameters that discriminate the specific feature involved (table names) are presented to the methods as arguments, taken from the corresponding information_application table register. Actually, the very name of the method to be called is taken from the corresponding register of the table. The method calls corresponding to the selected information items on the displayed table are handled by canvasPressEvent by the same code, regardless of the item, so everything (method name and method arguments) has to be extracted from the corresponding register of the application_information table, even if some of the arguments may not be applicable to the specific method involved, in which case they appear as Null on the table.</p>
+<section id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
+<dl class="py method">
+<dt class="sig sig-object py" id="upstream_downstream.upstream_downstream_tool.UpstreamDownstreamTool.canvasPressEvent">
+<span class="sig-prename descclassname"><span class="pre">UpstreamDownstreamTool.</span></span><span class="sig-name descname"><span class="pre">canvasPressEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">e</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#upstream_downstream.upstream_downstream_tool.UpstreamDownstreamTool.canvasPressEvent" title="Permalink to this definition">¶</a></dt>
+<dd><p>React to clicking on the canvas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>e</strong> (<em>event</em><em>, </em><em>QMouseEvent</em>) – String for translation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>—</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="upstream_downstream.upstream_downstream_tool.UpstreamDownstreamTool.generateWatershed">
+<span class="sig-prename descclassname"><span class="pre">UpstreamDownstreamTool.</span></span><span class="sig-name descname"><span class="pre">generateWatershed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reachid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">areaid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pfcode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tablename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonaccum_tbl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key_table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ismainrch</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#upstream_downstream.upstream_downstream_tool.UpstreamDownstreamTool.generateWatershed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a new layer with the set of upstream contributing areas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reachid</strong> (<em>int</em>) – Selected reach id.</p></li>
+<li><p><strong>areaid</strong> (<em>int</em>) – Selected reach contributing area id.</p></li>
+<li><p><strong>pfcode</strong> (<em>str</em>) – pfcode: Selected reach Pfafstetter code.</p></li>
+<li><p><strong>dist</strong> (<em>float</em>) – Selected reach distance to the basin mouth.</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Feature of interest in locale (or default english) language.</p></li>
+<li><p><strong>tablename</strong> (<em>str</em>) – Spatial feature accumulated value table name / Point feature table name.</p></li>
+<li><p><strong>nonaccum_tbl</strong> (<em>str</em>) – Spatial feature non accumulated value table name.</p></li>
+<li><p><strong>key_table</strong> (<em>str</em>) – Spatial feature key table name.</p></li>
+<li><p><strong>description_name</strong> (<em>str</em>) – Spatial feature table feature descriptor in locale (or default english) language.</p></li>
+<li><p><strong>value_name</strong> (<em>str</em>) – Spatial feature table value descriptor in locale (or default english) language.</p></li>
+<li><p><strong>ismainrch</strong> (<em>bool</em>) – Selected reach main reach flag.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p>—</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="upstream_downstream.upstream_downstream_tool.UpstreamDownstreamTool.generateMainStreamDown">
+<span class="sig-prename descclassname"><span class="pre">UpstreamDownstreamTool.</span></span><span class="sig-name descname"><span class="pre">generateMainStreamDown</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reachid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">areaid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pfcode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tablename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonaccum_tbl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key_table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ismainrch</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#upstream_downstream.upstream_downstream_tool.UpstreamDownstreamTool.generateMainStreamDown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a new layer with the set of downstream reaches along the main path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reachid</strong> (<em>int</em>) – Selected reach id.</p></li>
+<li><p><strong>areaid</strong> (<em>int</em>) – Selected reach contributing area id.</p></li>
+<li><p><strong>pfcode</strong> (<em>str</em>) – pfcode: Selected reach Pfafstetter code.</p></li>
+<li><p><strong>dist</strong> (<em>float</em>) – Selected reach distance to the basin mouth.</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Feature of interest in locale (or default english) language.</p></li>
+<li><p><strong>tablename</strong> (<em>str</em>) – Spatial feature accumulated value table name / Point feature table name.</p></li>
+<li><p><strong>nonaccum_tbl</strong> (<em>str</em>) – Spatial feature non accumulated value table name.</p></li>
+<li><p><strong>key_table</strong> (<em>str</em>) – Spatial feature key table name.</p></li>
+<li><p><strong>description_name</strong> (<em>str</em>) – Spatial feature table feature descriptor in locale (or default english) language.</p></li>
+<li><p><strong>value_name</strong> (<em>str</em>) – Spatial feature table value descriptor in locale (or default english) language.</p></li>
+<li><p><strong>ismainrch</strong> (<em>bool</em>) – Selected reach main reach flag.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p>—</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="upstream_downstream.upstream_downstream_tool.UpstreamDownstreamTool.generateUpstreamReaches">
+<span class="sig-prename descclassname"><span class="pre">UpstreamDownstreamTool.</span></span><span class="sig-name descname"><span class="pre">generateUpstreamReaches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reachid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">areaid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pfcode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tablename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonaccum_tbl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key_table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ismainrch</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#upstream_downstream.upstream_downstream_tool.UpstreamDownstreamTool.generateUpstreamReaches" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a new layer with the set of upstream reaches.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reachid</strong> (<em>int</em>) – Selected reach id.</p></li>
+<li><p><strong>areaid</strong> (<em>int</em>) – Selected reach contributing area id.</p></li>
+<li><p><strong>pfcode</strong> (<em>str</em>) – pfcode: Selected reach Pfafstetter code.</p></li>
+<li><p><strong>dist</strong> (<em>float</em>) – Selected reach distance to the basin mouth.</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Feature of interest in locale (or default english) language.</p></li>
+<li><p><strong>tablename</strong> (<em>str</em>) – Spatial feature accumulated value table name / Point feature table name.</p></li>
+<li><p><strong>nonaccum_tbl</strong> (<em>str</em>) – Spatial feature non accumulated value table name.</p></li>
+<li><p><strong>key_table</strong> (<em>str</em>) – Spatial feature key table name.</p></li>
+<li><p><strong>description_name</strong> (<em>str</em>) – Spatial feature table feature descriptor in locale (or default english) language.</p></li>
+<li><p><strong>value_name</strong> (<em>str</em>) – Spatial feature table value descriptor in locale (or default english) language.</p></li>
+<li><p><strong>ismainrch</strong> (<em>bool</em>) – Selected reach main reach flag.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p>—</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="upstream_downstream.upstream_downstream_tool.UpstreamDownstreamTool.generateCompletePathDownstream">
+<span class="sig-prename descclassname"><span class="pre">UpstreamDownstreamTool.</span></span><span class="sig-name descname"><span class="pre">generateCompletePathDownstream</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reachid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">areaid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pfcode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tablename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonaccum_tbl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key_table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ismainrch</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#upstream_downstream.upstream_downstream_tool.UpstreamDownstreamTool.generateCompletePathDownstream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a new layer with the set of downstream reaches along the main path and divergences.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reachid</strong> (<em>int</em>) – Selected reach id.</p></li>
+<li><p><strong>areaid</strong> (<em>int</em>) – Selected reach contributing area id.</p></li>
+<li><p><strong>pfcode</strong> (<em>str</em>) – pfcode: Selected reach Pfafstetter code.</p></li>
+<li><p><strong>dist</strong> (<em>float</em>) – Selected reach distance to the basin mouth.</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Feature of interest in locale (or default english) language.</p></li>
+<li><p><strong>tablename</strong> (<em>str</em>) – Spatial feature accumulated value table name / Point feature table name.</p></li>
+<li><p><strong>nonaccum_tbl</strong> (<em>str</em>) – Spatial feature non accumulated value table name.</p></li>
+<li><p><strong>key_table</strong> (<em>str</em>) – Spatial feature key table name.</p></li>
+<li><p><strong>description_name</strong> (<em>str</em>) – Spatial feature table feature descriptor in locale (or default english) language.</p></li>
+<li><p><strong>value_name</strong> (<em>str</em>) – Spatial feature table value descriptor in locale (or default english) language.</p></li>
+<li><p><strong>ismainrch</strong> (<em>bool</em>) – Selected reach main reach flag.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p>—</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="upstream_downstream.upstream_downstream_tool.UpstreamDownstreamTool.generateDownstreamPointFeatures">
+<span class="sig-prename descclassname"><span class="pre">UpstreamDownstreamTool.</span></span><span class="sig-name descname"><span class="pre">generateDownstreamPointFeatures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reachid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">areaid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pfcode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tablename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonaccum_tbl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key_table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ismainrch</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#upstream_downstream.upstream_downstream_tool.UpstreamDownstreamTool.generateDownstreamPointFeatures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a new layer with the set of a point feature elements directly on reaches along the main path downstream.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reachid</strong> (<em>int</em>) – Selected reach id.</p></li>
+<li><p><strong>areaid</strong> (<em>int</em>) – Selected reach contributing area id.</p></li>
+<li><p><strong>pfcode</strong> (<em>str</em>) – pfcode: Selected reach Pfafstetter code.</p></li>
+<li><p><strong>dist</strong> (<em>float</em>) – Selected reach distance to the basin mouth.</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Feature of interest in locale (or default english) language.</p></li>
+<li><p><strong>tablename</strong> (<em>str</em>) – Spatial feature accumulated value table name / Point feature table name.</p></li>
+<li><p><strong>nonaccum_tbl</strong> (<em>str</em>) – Spatial feature non accumulated value table name.</p></li>
+<li><p><strong>key_table</strong> (<em>str</em>) – Spatial feature key table name.</p></li>
+<li><p><strong>description_name</strong> (<em>str</em>) – Spatial feature table feature descriptor in locale (or default english) language.</p></li>
+<li><p><strong>value_name</strong> (<em>str</em>) – Spatial feature table value descriptor in locale (or default english) language.</p></li>
+<li><p><strong>ismainrch</strong> (<em>bool</em>) – Selected reach main reach flag.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p>—</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="upstream_downstream.upstream_downstream_tool.UpstreamDownstreamTool.generateUpstreamPointFeatures">
+<span class="sig-prename descclassname"><span class="pre">UpstreamDownstreamTool.</span></span><span class="sig-name descname"><span class="pre">generateUpstreamPointFeatures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reachid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">areaid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pfcode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tablename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonaccum_tbl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key_table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ismainrch</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#upstream_downstream.upstream_downstream_tool.UpstreamDownstreamTool.generateUpstreamPointFeatures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a new layer with the set of a point feature elements on reaches upstream.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reachid</strong> (<em>int</em>) – Selected reach id.</p></li>
+<li><p><strong>areaid</strong> (<em>int</em>) – Selected reach contributing area id.</p></li>
+<li><p><strong>pfcode</strong> (<em>str</em>) – pfcode: Selected reach Pfafstetter code.</p></li>
+<li><p><strong>dist</strong> (<em>float</em>) – Selected reach distance to the basin mouth.</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Feature of interest in locale (or default english) language.</p></li>
+<li><p><strong>tablename</strong> (<em>str</em>) – Spatial feature accumulated value table name / Point feature table name.</p></li>
+<li><p><strong>nonaccum_tbl</strong> (<em>str</em>) – Spatial feature non accumulated value table name.</p></li>
+<li><p><strong>key_table</strong> (<em>str</em>) – Spatial feature key table name.</p></li>
+<li><p><strong>description_name</strong> (<em>str</em>) – Spatial feature table feature descriptor in locale (or default english) language.</p></li>
+<li><p><strong>value_name</strong> (<em>str</em>) – Spatial feature table value descriptor in locale (or default english) language.</p></li>
+<li><p><strong>ismainrch</strong> (<em>bool</em>) – Selected reach main reach flag.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p>—</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="upstream_downstream.upstream_downstream_tool.UpstreamDownstreamTool.generateUpstreamSpatialFeatures">
+<span class="sig-prename descclassname"><span class="pre">UpstreamDownstreamTool.</span></span><span class="sig-name descname"><span class="pre">generateUpstreamSpatialFeatures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reachid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">areaid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pfcode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tablename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonaccum_tbl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key_table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ismainrch</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#upstream_downstream.upstream_downstream_tool.UpstreamDownstreamTool.generateUpstreamSpatialFeatures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a table layer with feature element - value pairs describing upstream characteristics of a spatial feature.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reachid</strong> (<em>int</em>) – Selected reach id.</p></li>
+<li><p><strong>areaid</strong> (<em>int</em>) – Selected reach contributing area id.</p></li>
+<li><p><strong>pfcode</strong> (<em>str</em>) – pfcode: Selected reach Pfafstetter code.</p></li>
+<li><p><strong>dist</strong> (<em>float</em>) – Selected reach distance to the basin mouth.</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Feature of interest in locale (or default english) language.</p></li>
+<li><p><strong>tablename</strong> (<em>str</em>) – Spatial feature accumulated value table name.</p></li>
+<li><p><strong>nonaccum_tbl</strong> (<em>str</em>) – Spatial feature non accumulated value table name.</p></li>
+<li><p><strong>key_table</strong> (<em>str</em>) – Spatial feature key table name.</p></li>
+<li><p><strong>description_name</strong> (<em>str</em>) – Spatial feature table feature descriptor in locale (or default english) language.</p></li>
+<li><p><strong>value_name</strong> (<em>str</em>) – Spatial feature table value descriptor in locale (or default english) language.</p></li>
+<li><p><strong>ismainrch</strong> (<em>bool</em>) – Selected reach main reach flag.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">PostHydro</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="informationstructure.html">Information Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pfafstettercoding.html">Pfafstetter Coding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="capabilities.html">PostHydro Capabilities</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Desktop Client</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#methods">Methods</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="upstreamdownstreamnavigation.html" title="previous chapter">Upstream Downstream Navigation</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2025, Flavio Lyra.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/desktopclient.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

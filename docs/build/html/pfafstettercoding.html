@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Pfafstetter Coding &#8212; PostHydro 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="PostHydro Capabilities" href="capabilities.html" />
+    <link rel="prev" title="Information Structure" href="informationstructure.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="pfafstetter-coding">
+<h1>Pfafstetter Coding<a class="headerlink" href="#pfafstetter-coding" title="Permalink to this headline">¶</a></h1>
+<p>Back in 1989 a Brazilian engineer named Otto Pfafstetter conceived and published, as an internal report of the government department where he worked, a new structured basin coding system in which the most important watershed characteristics were captured: its size (contributing area), and its relative hierarchy (upstream or downstream). This coding method gained a wider audience when published in 1999 by two USGS engineers, Kristin and James Verdin, on a Journal of Hydrology paper, and has been adopted worldwide since then.</p>
+<p>With just one decimal digit we can display the largest and most important sub-basins of a watershed, with explicit topology expression - the lower the digit, the most downstream is the sub-basin. More detailed division of each area can be done by similar additional steps applied to each sub-basin, each one adding a new digit to the right of the previous code.</p>
+<p>Pfafstetter coding attributes to a group of reaches between two confluence nodes two codes, one related to the main stream where the reaches belong (pfcodestr) and the other, unique to each such group, expressing their contributing area code according to the Pfafstetter coding criteria (pfcode). The latter, when taken together with the distance of the reach upstream point to the mouth of the basin, consists in a unique topological identifier for each of the represented reaches.</p>
+<p>The first part of the Pfafstetter basin coding involves tracing its main stream. Starting at the mouth node, reaches are followed upstream, always taking as main stream on a confluence node the reach with the greatest upstream contributing area. The main stream reaches take as pfcodestr the code of the basin being divided. At each confluence point on the main stream we have a tributary sub-basin. In the final part, the four largest of them are coded, from the most downstream up, as 2, 4, 6 and 8, by adding those digits to the right of the basin code. The odd sub-basins, called interbasins, contributing directly to the main stream, are likewise coded. The one downstream of sub-basin 2 gets code 1, the one between sub-basins 2 and 4 code 3, and so on. Interbasin 9 is the area upstream of sub-basin 8 confluence.</p>
+<p>The figure below shows a basin classified according to Pfafstetter</p>
+<img alt="_images/basin_map_with_legend.jpg" src="_images/basin_map_with_legend.jpg" />
+<p>We can notice that interbasin 3 does not show in the picture. The reason, shown in the detailed view below, is that the confluence points of basins 2 and 4 on the main stream are close, so interbasin 3 is much smaller than the other areas.</p>
+<img alt="_images/map_detail_with_legend.jpg" src="_images/map_detail_with_legend.jpg" />
+<p>Pfafstetter has shown that his concepts could be applied in a continental scale, by considering the coast line as some kind of a main stream, flowing counterclockwise to some point on the north of the continent, with all proper basins as left bank tributaries. According to Pfafstetter, the endorheic basins, flowing to internal lakes or seas, would get code 0.</p>
+<p>This extension of the basin concept to a continent of course does not reflect proper upstream-downstream relationship, but just proximity. This idea was further extended in PostHydro, to accomodate for islands and inner seas, by aggregating their coastlines as one single composite line, connected at the individual coastlines nearest points. This new approach, first applied to the European continent and European Union, is what makes possible the coding of all of the continent’s reaches, on the continent itself or on its islands, whether flowing to the sea or on endorheic basins, with a unique code for every represented river reach group between two confluence points.</p>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">PostHydro</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="informationstructure.html">Information Structure</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Pfafstetter Coding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="capabilities.html">PostHydro Capabilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="desktopclient.html">Desktop Client</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="informationstructure.html" title="previous chapter">Information Structure</a></li>
+      <li>Next: <a href="capabilities.html" title="next chapter">PostHydro Capabilities</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2025, Flavio Lyra.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/pfafstettercoding.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

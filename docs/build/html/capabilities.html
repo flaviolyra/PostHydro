@@ -1,0 +1,128 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>PostHydro Capabilities &#8212; PostHydro 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Structure Building" href="structurebuilding.html" />
+    <link rel="prev" title="Pfafstetter Coding" href="pfafstettercoding.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="posthydro-capabilities">
+<h1>PostHydro Capabilities<a class="headerlink" href="#posthydro-capabilities" title="Permalink to this headline">¶</a></h1>
+<p>PostHydro capabilities are implemented as generic procedures and functions in PostgreSQL programming language, plpgsql, as well as type definitions. They fall under one of three categories:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structurebuilding.html">Structure Building</a></li>
+<li class="toctree-l1"><a class="reference internal" href="informationreferencing.html">Information Referencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="upstreamdownstreamnavigation.html">Upstream Downstream Navigation</a></li>
+</ul>
+</div>
+<p>By Structure Building we mean creating the basic tables hydrography, contrib_area and ordered_mouth_nodes and providing the hydrography table with all information necessary for locating reaches and their watersheds inside the basins and for upstream / downstream navigation. It is done by means of generic functions and procedures written in PostgreSQL’s programming language, plpgsql. This is done just once, at the development of the database for a region, and does not take long.</p>
+<p>Information Referencing (hydroreferencing) involves procedures that give hydrological meaning to maps of point features related to the water streams (dams, water withdrawal or discharge points, water gauges, for example) and any kind of spatial map (soils map, land use map, country, state, municipality maps, census tract maps), sometime in combination with tables. Point information tables, with their geometry plus any other kind of information, get extra columns that locate them in their corresponding reaches of the hydrography table. Spatial information have to be crossed, using PostGIS or other any kind of GIS software, with the elementary contributing areas, generating a table with a value for any combination of numeric feature key and contributing area key, plus a multilanguage table that translates the feature keys to text. PostHydro has procedures to upstream accumulate the nonaccumulated table of feature values, generating a correspondent table with upstream accumulated values for every combination of feature and contributing area keys. These information referencing procedures are run just once, at the integration of the point or spatial information to the database, and do not take long.</p>
+<p>Upstream Downstream Navigation has functions that return, with fast ordinary database queries, the set of reaches upstream or downstream of a given reach, identified by its pfafstetter code and distance to the mouth. Besides this it can be used to query any point information that has been hydroreferenced - the upstream or downstream point features are those that correspond to the return set of reaches. It can also be used for the upstream area query - upstream area is the set of contributing areas corresponding to the set of upstream reaches. Spatial features upstream querying does not have to involve any of those functions, it is done by just querying the corresponding accumulated values table with the contributing area key corresponding to the reach.</p>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">PostHydro</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="informationstructure.html">Information Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pfafstettercoding.html">Pfafstetter Coding</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">PostHydro Capabilities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structurebuilding.html">Structure Building</a></li>
+<li class="toctree-l2"><a class="reference internal" href="informationreferencing.html">Information Referencing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="upstreamdownstreamnavigation.html">Upstream Downstream Navigation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="desktopclient.html">Desktop Client</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="pfafstettercoding.html" title="previous chapter">Pfafstetter Coding</a></li>
+      <li>Next: <a href="structurebuilding.html" title="next chapter">Structure Building</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2025, Flavio Lyra.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/capabilities.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
