@@ -1,12 +1,22 @@
+# PostHydro
+
 PostHydro is a database template that makes possible building a water resources information system, to be used in client-server applications on all sorts of issues concerning water resources management and studies, based exclusively on a relational database. It was built on top of a PostgreSQL - PostGIS database, but the concepts used can easily be adapted to any other relational database with a vector spatial information extension.
+
+## PostHydro Capabilities
 
 The PostHydro database includes tools to enable the creation of a database for any hydrological region, to reference all sorts of regional streams related and spatial geographic information to the hydrography context (hydroreferencing the information), and to query the resulting database of a region for the available streams related and spatial information on a surface water context (upstream or downstream of a point) based on fast, non-spatial, ordinary database queries.
 
+## Client Application
+
 A first client application was also developed, a desktop client built as a Python plugin for a QGIS application. The Python plugin is not region or information specific. It relies on the spatial information on the database and on the tables that express the streams related and spatial hydroreferenced information. It is completely guided by a database table called information_application that serves as a directory of the available information and as a pointer to the plugin functions and database tables to be used to query and depict the results on QGIS. These same concepts can easily be extended in the development of other clients, as for instance a web client.
+
+## Creating a PostHydro Database
 
 The PostHydro database can be created on top of a PostGIS database using the postthydro.gz file with:
 
 gunzip -c posthydro.gz | psql -U your_username -d posthydro
 
-The plugin can be created fro its zipfile (upstream_downstream/zip_build/upstream_downstream.zip).
+## Plugin Creation
+
+The plugin can be installed from its zipfile (upstream_downstream/zip_build/upstream_downstream.zip).
 
