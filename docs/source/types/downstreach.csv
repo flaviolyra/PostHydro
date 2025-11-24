@@ -1,0 +1,3 @@
+field name,field type,description
+stream,text,segment pfafstetter stream code
+upstrbasin,text, upstream point on segment pfafstetter code

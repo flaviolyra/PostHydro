@@ -1,0 +1,3 @@
+field name,field type,description
+areaupkm2,double precision,area up in km2
+mxlengthup,double precision,maximum length up in km

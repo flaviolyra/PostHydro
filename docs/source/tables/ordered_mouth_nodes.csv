@@ -1,0 +1,13 @@
+field name,field type,description
+gid,integer,primary key
+node,integer,mouth node id
+reachid,integer,mouth reach id
+coastline_id,integer,mouth coastline id
+coastline,character varying,mouth coastline name
+coast_system,character varying,coast system name
+point_locate,double precision,mouth node location on the coastline in km
+coast_segment,integer,mouth coastline segment id
+areaupkm2,double precision,basin area in km2
+mxlengthup,double precision,basin's greatest river length in km
+pfcode,character varying,basin's pfafstetter code
+geom,geometry(Point),mouth node geometry
