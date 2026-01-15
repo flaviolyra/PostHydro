@@ -1,0 +1,12 @@
+field name,field type,description
+gid,integer,primary key
+variable,text,feature of interest
+topology,text,'Upstream' or 'Downstream' on the locale language
+form,text,'Map Layer' or 'Table Layer' on the locale language
+accum_table,text,name of the table with the accumulated feature (if spatial) or the point table (if point)
+nonaccum_table,text,name of the table with the non accumulated feature (if spatial)
+key_table,text,name of the feature key table (if spatial)
+description_name,text,feature title on the application table on the locale language (if spatial)
+value_name,text,value title on the application table on the locale language (if spatial)
+method,text,application python method to implement the query
+locale,text,locale code

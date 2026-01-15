@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/plugins/upstream_downstream" >
+        <file>icon.png</file>
+    </qresource>
+</RCC>

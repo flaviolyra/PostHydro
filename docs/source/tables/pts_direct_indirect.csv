@@ -1,0 +1,6 @@
+field name,field type,description
+gid,integer,point id (primary key)
+name,text,point name
+hydroref_form,text,hydroreference form: 'direct' or 'indirect'
+geom_ind,geometry(Point),indirect point geometry (if indirect)
+geom,geometry(Point),point geometry

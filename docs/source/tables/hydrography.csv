@@ -1,0 +1,18 @@
+field name,field type,description
+gid,integer,primary key
+fnode,integer,from node id
+tnode,integer,to node id
+lengthkm,double precision,reach length in km
+areaid,integer,contributing area id
+is_down_rch,boolean,contributing area downmost reach flag 
+is_main_rch,boolean,main path across a contributing area reach flag
+areakm2,double precision,reach contributing area in km2
+areaupkm2,double precision,reach upstream contributing area in km2
+mxlengthup,double precision,reach longest upstream path from the its downstream point in km
+lngthtomouth,double precision,reach upstream point length to basin mouth in km
+pfcode,text,reach pfafestter code
+pfcodestr,text,reach main stream pfafestter code
+rivcode,text,reach river code
+rivname,text,reach river name
+lngthrivmouth,double precision,reach upstream point length to river mouth in km
+geom,geometry(LineString),geometry

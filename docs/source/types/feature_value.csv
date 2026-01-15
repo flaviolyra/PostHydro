@@ -1,0 +1,3 @@
+field name,field type,description
+feature,integer,feature id
+value,double precision,correspondent value

@@ -1,0 +1,4 @@
+field name,field type,description
+gid,integer,coast line id
+linename,character,coast line name
+geom,geometry(LineString),coast line geometry 

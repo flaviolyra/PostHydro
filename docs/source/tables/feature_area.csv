@@ -1,0 +1,5 @@
+field name,field type,description
+gid,integer,primary key
+areaid,integer,contributing area id
+id,integer,feature id
+value,double precision,contributing area feature value 
